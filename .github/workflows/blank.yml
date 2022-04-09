@@ -16,6 +16,9 @@ jobs:
       - name: Make Sidebar
         run: npm test
         
+      - name: rm node_modules
+        run: rm -rf node_modules
+        
       - name: Commit
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
