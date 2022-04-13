@@ -19,3 +19,4 @@
       - tools
         - excalidraw
           - [添加自定义字体](/docs/MD-NOTES/tools/excalidraw/添加自定义字体.md)
+        - [excalidraw自定义字体](/docs/MD-NOTES/tools/excalidraw自定义字体.md)
