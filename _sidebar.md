@@ -17,6 +17,4 @@
         - [Raft1](/docs/MD-NOTES/Raft/Raft1.md)
         - [Raft2](/docs/MD-NOTES/Raft/Raft2.md)
       - [tools](/docs/MD-NOTES/tools/README.md)
-        - excalidraw
-          - [添加自定义字体](/docs/MD-NOTES/tools/excalidraw/添加自定义字体.md)
         - [excalidraw自定义字体](/docs/MD-NOTES/tools/excalidraw自定义字体.md)
