@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "docsify-auto-sidebar -d ../*docsify-md-notes*"
+    "test": "docsify-auto-sidebar -d docs"
   },
   "keywords": [],
   "author": "",
