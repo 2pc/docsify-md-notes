@@ -14,7 +14,7 @@ jobs:
       - run: npm i docsify-tools
         
       - name: Make Sidebar
-        run: docsify-auto-sidebar -d docs
+        run: npm test
         
       - name: rm node_modules
         run: rm -rf node_modules
