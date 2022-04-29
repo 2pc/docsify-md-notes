@@ -133,6 +133,7 @@ flowchart LR
 ### Section X
 ```plantuml
 @startuml
+!include https://raw.githubusercontent.com/bschwarz/puml-themes/master/themes/bluegray/puml-theme-bluegray.puml
 Alice -> Bob: Authentication Request
 Bob --> Alice: Authentication Response
 
