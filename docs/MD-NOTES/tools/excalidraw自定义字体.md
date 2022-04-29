@@ -130,4 +130,13 @@ flowchart LR
     style id3 fill:#bbf,stroke:#f6,stroke-width:4px,color:#fff
     style id4 fill:#bbf,stroke:#f6,stroke-width:4px,color:#fff
 ```
+### Section X
+```plantuml
+@startuml
+Alice -> Bob: Authentication Request
+Bob --> Alice: Authentication Response
 
+Alice -> Bob: Another authentication Request
+Alice <-- Bob: another authentication Response
+@enduml
+```
