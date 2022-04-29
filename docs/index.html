@@ -31,7 +31,10 @@
           onlyCover:true,/* 首页只显示封面 */
           sidebarDisplayLevel: 0, // set sidebar display level
           autoHeader: true,
-            auto2top: true,
+          auto2top: true,
+	  plantuml: {
+            skin: 'default',
+          },
 
 	}
   </script>
@@ -42,5 +45,6 @@
   <script src="//unpkg.com/mermaid/dist/mermaid.js"></script>
   <script src="//unpkg.com/docsify-mermaid@latest/dist/docsify-mermaid.js"></script>
   <script>mermaid.initialize({ startOnLoad: true });</script>
+  <script src="//unpkg.com/docsify-plantuml/dist/docsify-plantuml.min.js"></script>
 </body>
 </html>
