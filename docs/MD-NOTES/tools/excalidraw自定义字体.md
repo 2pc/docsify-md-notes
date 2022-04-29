@@ -119,3 +119,15 @@ export const FONT_FAMILY = {
   font-display: swap;
 }
 ```
+mermaid TEST
+```mermaid
+flowchart LR
+    id1(Start)-->id2(fffffffffffffffffffffffffffff)
+    id1(Start)-->id3(Stop)
+    id3(Start)-->id4(Stop)
+    style id1 fill:#f9f,stroke:#f6,stroke-width:4px,color:#fff
+    style id2 fill:#bbf,stroke:#f6,stroke-width:4px,color:#fff
+    style id3 fill:#bbf,stroke:#f6,stroke-width:4px,color:#fff
+    style id4 fill:#bbf,stroke:#f6,stroke-width:4px,color:#fff
+```
+
