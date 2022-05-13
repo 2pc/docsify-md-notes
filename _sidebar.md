@@ -17,4 +17,5 @@
         - [Raft1](/docs/MD-NOTES/Raft/Raft1.md)
         - [Raft2](/docs/MD-NOTES/Raft/Raft2.md)
       - [tools](/docs/MD-NOTES/tools/README.md)
+        - [PlantUml_theme](/docs/MD-NOTES/tools/PlantUml_theme.md)
         - [excalidraw自定义字体](/docs/MD-NOTES/tools/excalidraw自定义字体.md)
