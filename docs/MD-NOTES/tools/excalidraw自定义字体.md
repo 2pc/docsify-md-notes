@@ -119,7 +119,7 @@ export const FONT_FAMILY = {
   font-display: swap;
 }
 ```
-mermaid TEST
+mermaid eg:1
 ```mermaid
 flowchart LR
     id1(Start)-->id2(fffffffffffffffffffffffffffff)
@@ -129,6 +129,21 @@ flowchart LR
     style id2 fill:#bbf,stroke:#f6,stroke-width:4px,color:#fff
     style id3 fill:#bbf,stroke:#f6,stroke-width:4px,color:#fff
     style id4 fill:#bbf,stroke:#f6,stroke-width:4px,color:#fff
+```
+eg:2
+```mermaid
+flowchart LR
+    id1(Start)-->id2(Stop)
+    id1(Start)-->id3(Stop)
+    id3(Start)-->id4(Stop)
+
+    classDef class1  fill:#50bf9f,stroke:#183652,stroke-width:4px;
+    classDef class2  fill:#f9f,stroke:#333,stroke-width:4px
+    classDef class3  fill:#bbf,stroke:#f66,stroke-width:2px,color:#fff,stroke-dasharray: 5 5
+    
+    class id1,id4 class1;
+    class id2 class2;
+    class id3 class3;
 ```
 ### Section X
 ```plantuml
