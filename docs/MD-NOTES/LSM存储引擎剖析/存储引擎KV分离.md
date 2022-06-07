@@ -3,7 +3,12 @@
 ##Badger 
 
 ### 写入流程
-1，数据写入
+1. 把key-vlaue整体append写Vlog
+2. value size是否满足阈值valueThreshold,大于阈值,则不吸入value,而是vptr,当然也会把vlog文件偏移位置fid,Offset（vlog.writableLogOffset）写入
+3. 否则将key-value整个entry都写入memtable
+4. 当memtable size超过一定限制后，将memtable转换为immutable
+
+写vlog
 ```
 // writeRequests is called serially by only one goroutine.
 func (db *DB) writeRequests(reqs []*request) error {
@@ -18,7 +23,7 @@ func (db *DB) writeRequests(reqs []*request) error {
 		}
 	}
 	db.opt.Debugf("writeRequests called. Writing to value log")
-	//先写vlog
+	//先写vlog,vlog文件fid以及offset
 	err := db.vlog.write(reqs)
 	if err != nil {
 		done(err)
@@ -61,7 +66,7 @@ func (db *DB) writeRequests(reqs []*request) error {
 	return nil
 }
 ```
-写入LSM
+写LSM
 ```
 func (db *DB) writeToLSM(b *request) error {
 	db.lock.RLock()
