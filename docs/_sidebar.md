@@ -18,8 +18,7 @@
       
     - Raft源码分析
       - [Raft1](/MD-NOTES/Raft源码分析/Raft1.md)
-    - Raft源码剖析
-      - [Raft2](/MD-NOTES/Raft源码剖析/Raft2.md)
+      - [Raft2](/MD-NOTES/Raft源码分析/Raft2.md)
     - Redis源码分析
       - [内存淘汰策略(Evict)](/MD-NOTES/Redis源码分析/内存淘汰策略(Evict).md)
     - [tools](/MD-NOTES/tools/README.md)
