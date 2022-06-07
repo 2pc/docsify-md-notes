@@ -19,8 +19,8 @@
     - Raft源码剖析
       - [Raft1](/MD-NOTES/Raft源码剖析/Raft1.md)
       - [Raft2](/MD-NOTES/Raft源码剖析/Raft2.md)
-    - Redis源码剖析
-      - [内存淘汰策略(Evict)](/MD-NOTES/Redis源码剖析/内存淘汰策略(Evict).md)
+    - Redis源码分析
+      - [内存淘汰策略(Evict)](/MD-NOTES/Redis源码分析/内存淘汰策略(Evict).md)
     - [tools](/MD-NOTES/tools/README.md)
       - [PlantUml_theme](/MD-NOTES/tools/PlantUml_theme.md)
       - [excalidraw自定义字体](/MD-NOTES/tools/excalidraw自定义字体.md)
