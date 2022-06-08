@@ -12,7 +12,8 @@
     -->id5(打开.sst文件newLevelsController)
     -->id6(vlog文件初始化vlog.init)
     -->id9(启动Compact压缩startCompact)-->id10(db.vlog.open)
-
+    -->id11(开启goroutine线程 db.doWrites)
+    -->id12(开启goroutine线程 db.handleHandovers)
 
     classDef class1  fill:#50bf9f,stroke:#183652,stroke-width:4px,color:#fff;
     classDef class2  fill:#f9f,stroke:#333,stroke-width:3px,color:#fff
@@ -20,7 +21,7 @@
     classDef class4  fill:#36ABD6,stroke:#183652,stroke-width:2px,color:#fff;
 
     
-    class id1,id2,id3,id4,id5,id6,id7,id8,id9,id10 class4;
+    class id1,id2,id3,id4,id5,id6,id7,id8,id9,id10,id11,id12 class4;
 
 ```
 
