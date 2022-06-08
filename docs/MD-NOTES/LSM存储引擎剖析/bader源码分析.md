@@ -2,6 +2,26 @@
 
 ## Badger 
 
+### Db.Open
+
+```
+ flowchart 
+    id1(Start)-->id2(打开MAINFEST文件openOrCreateManifestFile )
+    -->id3(打开KEYREGISTRY文件OpenKeyRegistry)
+    -->id4(打开.mem文件openMemTables)
+    -->id5(打开.sst文件newLevelsController)
+    -->id6(vlog文件初始化vlog.init)
+    -->id9(启动Compact压缩startCompact)-->id10(db.vlog.open)
+
+
+    classDef class1  fill:#50bf9f,stroke:#183652,stroke-width:4px,color:#fff;
+    classDef class2  fill:#f9f,stroke:#333,stroke-width:3px,color:#fff
+    classDef class3  fill:#bbf,stroke:#f66,stroke-width:2px,color:#fff,stroke-dasharray: 5 5
+    
+    class id1,id2,id3,id4,id5,id6,id7,id8,id9,id10 class1;
+
+```
+
 ### 写入流程
 1. 把key-vlaue整体append写Vlog
 2. value size是否满足阈值valueThreshold,大于阈值,则不吸入value,而是vptr,当然也会把vlog文件偏移位置fid,Offset（vlog.writableLogOffset）写入
