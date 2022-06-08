@@ -4,7 +4,7 @@
 
 ### Db.Open
 
-```
+```mermaid
  flowchart 
     id1(Start)-->id2(打开MAINFEST文件openOrCreateManifestFile )
     -->id3(打开KEYREGISTRY文件OpenKeyRegistry)
