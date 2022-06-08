@@ -17,8 +17,10 @@
     classDef class1  fill:#50bf9f,stroke:#183652,stroke-width:4px,color:#fff;
     classDef class2  fill:#f9f,stroke:#333,stroke-width:3px,color:#fff
     classDef class3  fill:#bbf,stroke:#f66,stroke-width:2px,color:#fff,stroke-dasharray: 5 5
+    classDef class4  fill:#36ABD6,stroke:#183652,stroke-width:2px,color:#fff;
+
     
-    class id1,id2,id3,id4,id5,id6,id7,id8,id9,id10 class1;
+    class id1,id2,id3,id4,id5,id6,id7,id8,id9,id10 class4;
 
 ```
 
