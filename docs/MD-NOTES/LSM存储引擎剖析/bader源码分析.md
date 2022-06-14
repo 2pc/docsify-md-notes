@@ -205,6 +205,7 @@ func (txn *Txn) Get(key []byte) (item *Item, rerr error) {
 	return item, nil
 }
 ```golang
+
 先查询memTable，再查找sst,也就是levelsController
 ```
 func (db *DB) get(key []byte) (y.ValueStruct, error) {
@@ -369,5 +370,4 @@ func (item *Item) yieldItemValue() ([]byte, func(), error) {
 	result, cb, err := db.vlog.Read(vp, item.slice)//从vlog读取value
 	return result, cb, nil
 }
-
 ```
