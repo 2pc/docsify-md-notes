@@ -287,7 +287,7 @@ func (s *Skiplist) Get(key []byte) y.ValueStruct {
 	return vs
 }
 ```
-3.从levelsController查找
+3.从sst,levelsController查找
 ```
 func (s *levelsController) get(key []byte, maxVs y.ValueStruct, startLevel int) (
 	y.ValueStruct, error) {
@@ -321,4 +321,50 @@ func (s *levelsController) get(key []byte, maxVs y.ValueStruct, startLevel int) 
 	}
 	return maxVs, nil
 }
+```
+以上几步并没有从vlog取value,注意示例里边还有个item.Value()
+```
+func (item *Item) Value(fn func(val []byte) error) error {
+	item.wg.Wait()
+	if item.status == prefetched {
+		if item.err == nil && fn != nil {
+			if err := fn(item.val); err != nil {
+				return err
+			}
+		}
+		return item.err
+	}
+	buf, cb, err := item.yieldItemValue()//从vlog读取value
+	defer runCallback(cb)
+	if err != nil {
+		return err
+	}
+	if fn != nil {
+		return fn(buf)
+	}
+	return nil
+}
+func (item *Item) yieldItemValue() ([]byte, func(), error) {
+	key := item.Key() // No need to copy.
+	if !item.hasValue() {
+		return nil, nil, nil
+	}
+
+	if item.slice == nil {
+		item.slice = new(y.Slice)
+	}
+
+	if (item.meta & bitValuePointer) == 0 {
+		val := item.slice.Resize(len(item.vptr))
+		copy(val, item.vptr)
+		return val, nil, nil
+	}
+
+	var vp valuePointer
+	vp.Decode(item.vptr)
+	db := item.txn.db
+	result, cb, err := db.vlog.Read(vp, item.slice)//从vlog读取value
+	return result, cb, nil
+}
+
 ```
