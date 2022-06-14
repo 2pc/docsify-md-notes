@@ -204,10 +204,10 @@ func (txn *Txn) Get(key []byte) (item *Item, rerr error) {
 	item.expiresAt = vs.ExpiresAt
 	return item, nil
 }
-```golang
+```   
 
 先查询memTable，再查找sst,也就是levelsController
-```
+```golang   
 func (db *DB) get(key []byte) (y.ValueStruct, error) {
 	if db.IsClosed() {
 		return y.ValueStruct{}, ErrDBClosed
@@ -237,10 +237,10 @@ func (db *DB) get(key []byte) (y.ValueStruct, error) {
 	//从sst查找
 	return db.lc.get(key, maxVs, 0)
 }
-```
+```   
 
 getMemTables会包含memTable以及imm
-```
+```   
 func (db *DB) getMemTables() ([]*memTable, func()) {
 	db.lock.RLock()
 	defer db.lock.RUnlock()
@@ -266,10 +266,10 @@ func (db *DB) getMemTables() ([]*memTable, func()) {
 		}
 	}
 }
-```
+```   
 
 遍历memTable 的 Skiplist 
-```
+```   
 // Get gets the value associated with the key. It returns a valid value if it finds equal or earlier
 // version of the same key.
 func (s *Skiplist) Get(key []byte) y.ValueStruct {
@@ -288,10 +288,10 @@ func (s *Skiplist) Get(key []byte) y.ValueStruct {
 	vs.Version = y.ParseTs(nextKey)
 	return vs
 }
-```
+```   
 
 3.从sst,levelsController查找
-```
+```   
 func (s *levelsController) get(key []byte, maxVs y.ValueStruct, startLevel int) (
 	y.ValueStruct, error) {
 	if s.kv.IsClosed() {
@@ -324,10 +324,10 @@ func (s *levelsController) get(key []byte, maxVs y.ValueStruct, startLevel int) 
 	}
 	return maxVs, nil
 }
-```
+```   
 
 以上几步并没有从vlog取value,注意示例里边还有个item.Value()
-```
+```   
 func (item *Item) Value(fn func(val []byte) error) error {
 	item.wg.Wait()
 	if item.status == prefetched {
