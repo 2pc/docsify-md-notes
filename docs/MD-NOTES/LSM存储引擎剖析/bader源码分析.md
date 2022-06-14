@@ -238,6 +238,7 @@ func (db *DB) get(key []byte) (y.ValueStruct, error) {
 }
 
 ```
+
 getMemTables会包含memTable以及imm
 ```
 func (db *DB) getMemTables() ([]*memTable, func()) {
@@ -266,6 +267,7 @@ func (db *DB) getMemTables() ([]*memTable, func()) {
 	}
 }
 ```
+
 遍历memTable 的 Skiplist 
 ```
 // Get gets the value associated with the key. It returns a valid value if it finds equal or earlier
@@ -287,6 +289,7 @@ func (s *Skiplist) Get(key []byte) y.ValueStruct {
 	return vs
 }
 ```
+
 3.从sst,levelsController查找
 ```
 func (s *levelsController) get(key []byte, maxVs y.ValueStruct, startLevel int) (
@@ -322,6 +325,7 @@ func (s *levelsController) get(key []byte, maxVs y.ValueStruct, startLevel int) 
 	return maxVs, nil
 }
 ```
+
 以上几步并没有从vlog取value,注意示例里边还有个item.Value()
 ```
 func (item *Item) Value(fn func(val []byte) error) error {
