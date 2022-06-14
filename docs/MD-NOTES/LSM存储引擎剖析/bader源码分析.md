@@ -90,7 +90,7 @@ func (db *DB) writeRequests(reqs []*request) error {
 }
 ```
 写LSM
-```
+```golang
 func (db *DB) writeToLSM(b *request) error {
 	db.lock.RLock()
 	defer db.lock.RUnlock()
@@ -204,7 +204,7 @@ func (txn *Txn) Get(key []byte) (item *Item, rerr error) {
 	item.expiresAt = vs.ExpiresAt
 	return item, nil
 }
-```
+```golang
 先查询memTable，再查找sst,也就是levelsController
 ```
 func (db *DB) get(key []byte) (y.ValueStruct, error) {
@@ -236,7 +236,6 @@ func (db *DB) get(key []byte) (y.ValueStruct, error) {
 	//从sst查找
 	return db.lc.get(key, maxVs, 0)
 }
-
 ```
 
 getMemTables会包含memTable以及imm
