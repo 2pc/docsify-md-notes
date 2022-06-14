@@ -130,3 +130,195 @@ func (db *DB) writeToLSM(b *request) error {
 	return nil
 }
 ```
+### 数据读取
+1. 数据读取示例
+```
+err = db.View(func(txn *Txn) error {
+	item, err := txn.Get([]byte("key"))
+	if err != nil {
+		return err
+	}
+
+	var valCopy []byte
+	item.Value(func(val []byte) error {
+		valCopy = append([]byte{}, val...)
+		return nil
+
+	})
+```
+2. 从LSM中查询entry，并不确定是value还是vptr
+```
+// Get looks for key and returns corresponding Item.
+// If key is not found, ErrKeyNotFound is returned.
+func (txn *Txn) Get(key []byte) (item *Item, rerr error) {
+	if len(key) == 0 {
+		return nil, ErrEmptyKey
+	} else if txn.discarded {
+		return nil, ErrDiscardedTxn
+	}
+
+	if err := txn.db.isBanned(key); err != nil {
+		return nil, err
+	}
+
+	item = new(Item)
+	if txn.update {
+		if e, has := txn.pendingWrites[string(key)]; has && bytes.Equal(key, e.Key) {
+			if isDeletedOrExpired(e.meta, e.ExpiresAt) {
+				return nil, ErrKeyNotFound
+			}
+			// Fulfill from cache.
+			item.meta = e.meta
+			item.val = e.Value
+			item.userMeta = e.UserMeta
+			item.key = key
+			item.status = prefetched
+			item.version = txn.readTs
+			item.expiresAt = e.ExpiresAt
+			// We probably don't need to set db on item here.
+			return item, nil
+		}
+		// Only track reads if this is update txn. No need to track read if txn serviced it
+		// internally.
+		txn.addReadKey(key)
+	}
+
+	seek := y.KeyWithTs(key, txn.readTs)
+	vs, err := txn.db.get(seek)//get操作
+	if err != nil {
+		return nil, y.Wrapf(err, "DB::Get key: %q", key)
+	}
+	if vs.Value == nil && vs.Meta == 0 {
+		return nil, ErrKeyNotFound
+	}
+	if isDeletedOrExpired(vs.Meta, vs.ExpiresAt) {
+		return nil, ErrKeyNotFound
+	}
+
+	item.key = key
+	item.version = vs.Version
+	item.meta = vs.Meta
+	item.userMeta = vs.UserMeta
+	item.vptr = y.SafeCopy(item.vptr, vs.Value)
+	item.txn = txn
+	item.expiresAt = vs.ExpiresAt
+	return item, nil
+}
+```
+先查询memTable，再查找sst,也就是levelsController
+```
+func (db *DB) get(key []byte) (y.ValueStruct, error) {
+	if db.IsClosed() {
+		return y.ValueStruct{}, ErrDBClosed
+	}
+	//包括memTable(mt,imm)
+	tables, decr := db.getMemTables() // Lock should be released.
+	defer decr()
+
+	var maxVs y.ValueStruct
+	version := y.ParseTs(key)
+
+	y.NumGetsAdd(db.opt.MetricsEnabled, 1)
+	for i := 0; i < len(tables); i++ {
+		vs := tables[i].sl.Get(key)
+		y.NumMemtableGetsAdd(db.opt.MetricsEnabled, 1)
+		if vs.Meta == 0 && vs.Value == nil {
+			continue
+		}
+		// Found the required version of the key, return immediately.
+		if vs.Version == version {
+			return vs, nil
+		}
+		if maxVs.Version < vs.Version {
+			maxVs = vs
+		}
+	}
+	//从sst查找
+	return db.lc.get(key, maxVs, 0)
+}
+
+```
+getMemTables会包含memTable以及imm
+```
+func (db *DB) getMemTables() ([]*memTable, func()) {
+	db.lock.RLock()
+	defer db.lock.RUnlock()
+
+	var tables []*memTable
+
+	// Mutable memtable does not exist in read-only mode.
+	if !db.opt.ReadOnly {
+		// Get mutable memtable.
+		tables = append(tables, db.mt)
+		db.mt.IncrRef()
+	}
+
+	// Get immutable memtables.
+	last := len(db.imm) - 1
+	for i := range db.imm {
+		tables = append(tables, db.imm[last-i])
+		db.imm[last-i].IncrRef()
+	}
+	return tables, func() {
+		for _, tbl := range tables {
+			tbl.DecrRef()
+		}
+	}
+}
+```
+遍历memTable 的 Skiplist 
+```
+// Get gets the value associated with the key. It returns a valid value if it finds equal or earlier
+// version of the same key.
+func (s *Skiplist) Get(key []byte) y.ValueStruct {
+	n, _ := s.findNear(key, false, true) // findGreaterOrEqual.
+	if n == nil {
+		return y.ValueStruct{}
+	}
+
+	nextKey := s.arena.getKey(n.keyOffset, n.keySize)
+	if !y.SameKey(key, nextKey) {
+		return y.ValueStruct{}
+	}
+
+	valOffset, valSize := n.getValueOffset()
+	vs := s.arena.getVal(valOffset, valSize)
+	vs.Version = y.ParseTs(nextKey)
+	return vs
+}
+```
+3.从levelsController查找
+```
+func (s *levelsController) get(key []byte, maxVs y.ValueStruct, startLevel int) (
+	y.ValueStruct, error) {
+	if s.kv.IsClosed() {
+		return y.ValueStruct{}, ErrDBClosed
+	}
+	// It's important that we iterate the levels from 0 on upward. The reason is, if we iterated
+	// in opposite order, or in parallel (naively calling all the h.RLock() in some order) we could
+	// read level L's tables post-compaction and level L+1's tables pre-compaction. (If we do
+	// parallelize this, we will need to call the h.RLock() function by increasing order of level
+	// number.)
+	version := y.ParseTs(key)
+	for _, h := range s.levels {
+		// Ignore all levels below startLevel. This is useful for GC when L0 is kept in memory.
+		if h.level < startLevel {
+			continue
+		}
+		vs, err := h.get(key) // Calls h.RLock() and h.RUnlock().
+		if err != nil {
+			return y.ValueStruct{}, y.Wrapf(err, "get key: %q", key)
+		}
+		if vs.Value == nil && vs.Meta == 0 {
+			continue
+		}
+		if vs.Version == version {
+			return vs, nil
+		}
+		if maxVs.Version < vs.Version {
+			maxVs = vs
+		}
+	}
+	return maxVs, nil
+}
+```
