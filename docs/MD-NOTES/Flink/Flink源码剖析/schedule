@@ -1,0 +1,34 @@
+
+
+```plantuml
+@startuml
+
+
+class DefaultScheduler
+abstract class  SchedulerBase
+interface SchedulerOperations{
+void allocateSlotsAndDeploy()
+}
+interface SchedulerNG{
+}
+interface CheckpointScheduling{
+    void startCheckpointScheduler();
+    void stopCheckpointScheduler();
+}
+interface SchedulerNGFactory{
+SchedulerNG createInstance()
+}
+class DefaultSchedulerFactory{
+public SchedulerNG createInstance(）
+}
+'实现
+DefaultScheduler..|>SchedulerOperations:实现
+'继承
+DefaultScheduler--|>SchedulerBase:继承
+SchedulerBase..|>SchedulerNG:实现
+SchedulerBase..|>CheckpointScheduling:实现
+DefaultSchedulerFactory..|>SchedulerNGFactory:实现
+'工厂创建
+DefaultSchedulerFactory..>DefaultScheduler:工厂创建
+@enduml
+```
