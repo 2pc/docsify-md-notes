@@ -47,7 +47,6 @@ public BarrierHandlerState alignmentTimeout(
     state.prioritizeAllAnnouncements();
     return new AlternatingWaitingForFirstBarrierUnaligned(true, state);
 }
-
 protected BarrierHandlerState transitionAfterBarrierReceived(ChannelState state) {
     return new AlternatingCollectingBarriers(state);
 }
