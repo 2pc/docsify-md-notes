@@ -4,6 +4,7 @@
         - [Flink_使用入门](/MD-NOTES/Flink/Flink使用指南/Flink_使用入门.md)
         - [Flink_疑难杂症](/MD-NOTES/Flink/Flink使用指南/Flink_疑难杂症.md)
       - Flink源码剖析
+        - [CheckPoint](/MD-NOTES/Flink/Flink源码剖析/CheckPoint.md)
         - [Flink_CheckPoint源码分析](/MD-NOTES/Flink/Flink源码剖析/Flink_CheckPoint源码分析.md)
         - [Flink_FlinkSQL源码分析](/MD-NOTES/Flink/Flink源码剖析/Flink_FlinkSQL源码分析.md)
         - [Flink_Yarn application源码分析](/MD-NOTES/Flink/Flink源码剖析/Flink_Yarn-application源码分析.md)
