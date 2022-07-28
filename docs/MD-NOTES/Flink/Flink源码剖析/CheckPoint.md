@@ -1,4 +1,4 @@
-
+关系图
 ```plantuml
 @startuml
 interface BarrierHandlerState{
