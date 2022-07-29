@@ -25,3 +25,4 @@
     - [tools](/MD-NOTES/tools/README.md)
       - [PlantUml_theme](/MD-NOTES/tools/PlantUml_theme.md)
       - [excalidraw自定义字体](/MD-NOTES/tools/excalidraw自定义字体.md)
+      - [mermaid](/MD-NOTES/tools/mermaid.md)
