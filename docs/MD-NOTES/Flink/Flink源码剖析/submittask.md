@@ -31,7 +31,7 @@ start
 :startTaskThread;
 :run;
 :doRun;
-:loadAndInstantiateInvokable;
+:loadAndInstantiate\nInvokable;
 |StreamTask|
 :restore;
 :invoke;
