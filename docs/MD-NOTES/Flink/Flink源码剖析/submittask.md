@@ -2,7 +2,7 @@
 ```plantuml
 @startuml
 skinparam swimlane {
-  BorderThickness 0
+  BorderThickness 1
   TitleFontColor black
   TitleFontSize 16
 
